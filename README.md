@@ -12,6 +12,7 @@ e la cartella "Attack" dove vengono estratti
 Il progetto si suddivide in diverse parti:
 
 ### Regole zeek:
+<a name="feature"></a>
 Il primo step riguarda la creazione di regole zeek per l'estrazione delle features esposte nell'articolo:
 https://ieeexplore.ieee.org/document/7348942
 Le feature sono le seguenti
@@ -49,3 +50,9 @@ Il Dataset fornito viene da me testato per le seguenti tipologie di attacco:
 - Brute force write
 - Baseline replay
 Gli script per il rilevamento si torvano nella cartella "Attacchi_zeek". Comandi:
+```bash
+zeek -C -r labtel.pcap ./attacchi_zeek/"nome script da testare"
+```
+
+### P.S.
+Nella cartella "feature_singole" sono presenti gli script che estraggono le singole feature [Vai alla Sezione Collegata](#feature).
