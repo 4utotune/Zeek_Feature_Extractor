@@ -29,5 +29,5 @@ Testare gli script singoli:
 last_capture.pcap -> connessione 3-way-handshake
 labtel-pcap -> varie connessioni di tutti i tipi
 Automatizzare il processo di estrazione di feature del Dataset per connessioni benigne:
-'''bash chmod +x auto.sh '''
-'''bash ./auto.sh '''
+''' chmod +x auto.sh '''
+\```bash ./auto.sh \```
