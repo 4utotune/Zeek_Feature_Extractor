@@ -8,9 +8,10 @@ Il dataset si suddivide in due tipologie di file pcap, abbiamo così la cartella
 
 e la cartella "Attack" dove vengono estratti
 
-## Progetto
-Il progetto si suddivide in diverse parti:
+Il progetto mira a testare il Dataset "CIC Modbus Dataset 2023" <a href="https://www.unb.ca/cic/datasets/modbus-2023.html"></a> seguendo le indicazioni fornite nell'articolo "UNSW-NB15: a comprehensive data set for network intrusion detection systems (UNSW-NB15 network data set)" <a href="https://ieeexplore.ieee.org/document/7348942"> </a>.s
 
+## Progetto
+Il progetto si suddivide nelle seguenti parti:
 ### Regole zeek:
 <a name="feature"></a>
 Il primo step riguarda la creazione di regole zeek per l'estrazione delle features esposte nell'articolo:
@@ -38,7 +39,6 @@ chmod +x auto.sh
 ./auto.sh 
 ```
 Features estratte ed i risultati sono scritti nella cartella di "Results"!
-
 ### Rilvamento attacchi:
 Il Dataset fornito viene da me testato per le seguenti tipologie di attacco:
 - Reconnaissance
@@ -53,6 +53,5 @@ Gli script per il rilevamento si torvano nella cartella "Attacchi_zeek". Comandi
 ```bash
 zeek -C -r labtel.pcap ./attacchi_zeek/"nome script da testare"
 ```
-
-### P.S.
+### Feature Singole
 Nella cartella "feature_singole" sono presenti gli script che estraggono le singole feature [Vai alla Sezione Collegata](#feature).
