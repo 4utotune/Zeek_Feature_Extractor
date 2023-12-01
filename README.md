@@ -25,16 +25,17 @@ Le feature sono le seguenti
 ```bash
 cd Zeek_Feature_Extractor
 ```
-2. Testare gli script singoli:
+2. Testare gli script singoli: (last_capture.pcap -> connessione 3-way-handshake
+labtel-pcap -> varie connessioni di tutti i tipi)
 ```bash
 zeek -C -r last_capture.pcap ./script/"nome script da testare"
 zeek -C -r labtel.pcap ./script/"nome script da testare"
 ```
-last_capture.pcap -> connessione 3-way-handshake
-labtel-pcap -> varie connessioni di tutti i tipi
 3. Automatizzare il processo di estrazione di feature del Dataset per connessioni benigne:
 ```bash
 chmod +x auto.sh
 ./auto.sh 
 ```
+Features estratte ed i risultati sono scritti nella cartella di "Results"!
 
+### Rilvamento attacchi:
