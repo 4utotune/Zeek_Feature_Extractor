@@ -39,3 +39,13 @@ chmod +x auto.sh
 Features estratte ed i risultati sono scritti nella cartella di "Results"!
 
 ### Rilvamento attacchi:
+Il Dataset fornito viene da me testato per le seguenti tipologie di attacco:
+- Reconnaissance
+- DDoS
+- Loading payloads 
+- Fuzzing
+- Modify length parameters
+- Shellcode
+- Brute force write
+- Baseline replay
+Gli script per il rilevamento si torvano nella cartella "Attacchi_zeek". Comandi:
