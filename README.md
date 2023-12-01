@@ -21,14 +21,18 @@ Le feature sono le seguenti
 - Time Features = Source jitter, Destination jitter, record start time, record last time, the sum of 'synack' and 'ackdat' of the TCP, the time between the 'syn' and the 'synack' packets of the TCP, the time between the 'synack' and the 'ack' packets of the TCP
 
 ### Per avviare il feature extractor usare i comandi:
-Posizionarsi nella cartella:
-'''cd Zeek_Feature_Extractor'''
-Testare gli script singoli:
-''' zeek -C -r last_capture.pcap ./script/"nome script da testare"'''
-''' zeek -C -r labtel.pcap ./script/"nome script da testare"'''
+1. Posizionarsi nella cartella:
+```bash
+cd Zeek_Feature_Extractor
+```
+2. Testare gli script singoli:
+```bash
+zeek -C -r last_capture.pcap ./script/"nome script da testare"
+zeek -C -r labtel.pcap ./script/"nome script da testare"
+```
 last_capture.pcap -> connessione 3-way-handshake
 labtel-pcap -> varie connessioni di tutti i tipi
-Automatizzare il processo di estrazione di feature del Dataset per connessioni benigne:
+3. Automatizzare il processo di estrazione di feature del Dataset per connessioni benigne:
 ```bash
 chmod +x auto.sh
 ./auto.sh 
