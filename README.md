@@ -19,7 +19,7 @@ Le regole zeek sono utilizzate per personalizzare l'estrazione delle features, i
 - Basic Features = The state, Record total duration, Source to destination bytes, Destination to source bytes, Source to destination time to live, Destination to source time to live, Source packets retransimetted or dropped, Destination packets retransimetted or dropped, http/ftp/ssh/dns/(-), Source bits per second, Destination bits per second, Source to destination packet count, Destination to source packet count
 - Content Features = Source TCP window advertisement, Destination TCP window advertisement, Source TCP sequence number, Destination TCP sequence number, Mean of the flow packet size transmitted by the src, Mean of the flow packet size transmitted by the dst, the depth into the connection of the http request/response transaction
 - Time Features = Source jitter, Destination jitter, record start time, record last time, the sum of 'synack' and 'ackdat' of the TCP, the time between the 'syn' and the 'synack' packets of the TCP, the time between the 'synack' and the 'ack' packets of the TCP
-- Attacchi Category Features = le regole sono esposte <a href="attacchi">qui</a>
+- Attacchi Category Features = le regole sono esposte [qui](#attacchi)
 
 ### Per avviare il feature extractor usare i comandi:
 1. Posizionarsi nella cartella:
