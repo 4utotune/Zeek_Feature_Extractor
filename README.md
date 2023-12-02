@@ -1,15 +1,12 @@
 # Zeek_Feature_Extractor
 
 ## Introduzione
-Il progetto mira a creare delle regole zeek per l'estrazione delle features esposte nell'articolo: 
-https://ieeexplore.ieee.org/document/7348942
-da applicare al Dataset CIC Modbus Dataset 2023 https://www.unb.ca/cic/datasets/modbus-2023.html .
-Il dataset si suddivide in due tipologie di file pcap, abbiamo così la cartella "Benign" dove vengono salvati diversi file pcap per ogni computer in rete, secondo la seguente architettura:
-
-e la cartella "Attack" dove vengono estratti
-
-Il progetto mira a testare il Dataset <a href="https://www.unb.ca/cic/datasets/modbus-2023.html">"CIC Modbus Dataset 2023"</a> seguendo le indicazioni fornite nell'articolo <a href="https://ieeexplore.ieee.org/document/7348942">"UNSW-NB15: a comprehensive data set for network intrusion detection systems (UNSW-NB15 network data set)"</a>
-
+<a href="https://zeek.org">Zeek</a> (inizialmente Bro) è un Tool Open Source per il Monitoraggio della Sicurezza in rete.
+In questo progetto questo potente tool viene utilizzato per personalizzare <b>l'estrazione di Feature partendo da file PCAP</b>, a tale scopo vengono utilizzati:
+- Il Dataset: <a href="https://www.unb.ca/cic/datasets/modbus-2023.html">"CIC Modbus Dataset 2023"</a>
+- Le Features esposte nell'articolo: <a href="https://ieeexplore.ieee.org/document/7348942">"UNSW-NB15: a comprehensive data set for network intrusion detection systems (UNSW-NB15 network data set)"</a>
+Viene creato inoltre un <b>file bash per automatizzare il processo di estrazione delle features</b> e creazione di file di log partendo da una Dataset. 
+Viene inoltre creata una rete neurale di classificazione che permette, partendo da un file PCAP di identificare se un file PCAP fornito in Input presenti dal traffico legittimo o meno ed in caso che sia in grado di identificare l'attacco che è stato eseguito.
 ## Progetto
 Il progetto si suddivide nelle seguenti parti:
 <a name="feature"></a>
