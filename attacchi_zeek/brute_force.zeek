@@ -16,8 +16,8 @@ type packet: record {
 global packets: table[addr] of packet = table();
 
 event new_packet(c: connection, p: pkt_hdr){
-    local sogliaPkt = 1;
-    local sogliaSize = 1;
+    local sogliaPkt = 10000;
+    local sogliaSize = 10000;
     #analisi pacchetto
     local pacchetto: packet; 
     if (c$id$orig_h !in packets) {

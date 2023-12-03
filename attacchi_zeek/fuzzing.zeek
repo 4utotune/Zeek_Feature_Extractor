@@ -5,7 +5,7 @@
 @load base/protocols/ftp
 
 function is_fuzzing_request(body: string): int {
-    local controllo: string = "\x41\x41\x41";
+    local controllo: string = "\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41";
     if ( controllo in body) {
         return 0;  # Esempio: Rileva la sequenza di byte "AAA"
     }

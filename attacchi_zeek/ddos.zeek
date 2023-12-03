@@ -18,7 +18,7 @@ global ddos_table: table[string] of DDoSInfo = table();
 global ddos_tabledns: table[string] of DDoSInfoDNS = table();
 
 event connection_state_remove(c: connection){
-    local soglia = 1;
+    local soglia = 100000;
     if (c$orig$num_pkts > soglia) {
         print fmt("Connessione=Possibile attacco DDoS rilevato: %s da %s", c$uid, c$id$orig_h);
     }

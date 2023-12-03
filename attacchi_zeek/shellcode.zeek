@@ -5,7 +5,7 @@
 @load base/protocols/ftp
 
 function is_shellcode_request(body: string): int {
-    local controllo: string = "\x90\x90\x90";
+    local controllo: string = "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90";
     if ( controllo in body) {
         return 0;   # Esempio: Rileva la sequenza di byte "\x90\x90\x90" (NOP sled)
     }

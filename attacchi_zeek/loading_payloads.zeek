@@ -1,7 +1,7 @@
 @load base/protocols/http
 
 # Definizione di una soglia per la dimensione del payload
-const soglia_payload: int = 1; 
+const soglia_payload: int = 100000; 
 
 event http_request(c: connection, method: string, original_URI: string, unescaped_URI: string, version: string) {
     # Verifica se il payload supera la soglia definita
