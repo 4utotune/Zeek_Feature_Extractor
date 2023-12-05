@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from tqdm import tqdm
+from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, LSTM
 from tensorflow.keras.utils import to_categorical
@@ -9,7 +10,7 @@ import socket
 
 # Directory dei dataset
 dataset_path_legittimo = "/Users/gabrieletassinari/Desktop/Zeek_Feature_Extractor/dataset_leg/"
-#dataset_path_malevolo = "/Users/gabrieletassinari/Desktop/Zeek_Feature_Extractor/dataset_malevolo/"
+dataset_path_malevolo = "/Users/gabrieletassinari/Desktop/Zeek_Feature_Extractor/dataset_malevolo/"
 
 # Lista per le etichette e le features
 labels = []
@@ -89,26 +90,52 @@ def load_data_from_directory(directory, label):
             extract_features(file_path)
     return data
 
-if __name__ == "__main__":
-    # Caricamento dei dati legittimi
-    load_data_from_directory(dataset_path_legittimo, label=0)
+# Caricamento dei dati legittimi
+load_data_from_directory(dataset_path_legittimo, label=0)
 
-    # Converte le liste in array numpy
-    labels = np.array(labels)
+# Caricamento dei dati malevoli
+load_data_from_directory(dataset_path_malevolo, label=1)
 
-    # Padding dei pacchetti per uniformare le dimensioni
-    max_seq_length = max_packets  # Usa la lunghezza massima dei pacchetti
-    features_padded = []
+# Converte le liste in array numpy
+labels = np.array(labels)
 
-    for file_features in features:
-        # Padding delle sequenze per uniformare le dimensioni
-        padding_size = max_seq_length - len(file_features)
-        padded_sequence = file_features + [[None] * 13] * padding_size
-        features_padded.append(padded_sequence)
+# Padding dei pacchetti per uniformare le dimensioni
+features_padded = [file_features + [[None] * 13] * (max_packets - len(file_features)) for file_features in features]
 
-    # Converte le feature in un array NumPy
-    features = np.array(features_padded, dtype=object)
+# Converte le feature in un array NumPy
+features_padded = np.array(features_padded)
 
-    # Salva gli array NumPy su disco
-    np.save("labels0.npy", labels)
-    np.save("features_padded0.npy", features)
+# Salva gli array NumPy su disco
+np.save("labels0.npy", labels)
+np.save("features_padded0.npy", features_padded)
+
+# Suddividi il dataset in training e test set
+train_size = int(0.9 * len(features_padded))
+
+# Suddividi i dati in un training set e un testing set
+x_train, x_test = features_padded[:train_size], features_padded[train_size:]
+y_train, y_test = labels[:train_size], labels[train_size:]
+
+# Codifica le etichette
+le = LabelEncoder()
+y_train_encoded = to_categorical(le.fit_transform(y_train))
+y_test_encoded = to_categorical(le.transform(y_test))
+
+print("Inizio training...")
+# Costruisci il modello della rete neurale
+model = Sequential()
+model.add(LSTM(64, input_shape=(max_packets, 13), activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(2, activation='softmax'))  # Output layer con 2 neuroni per la classificazione binaria
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+# Addestra il modello
+model.fit(x_train, y_train_encoded, epochs=10, batch_size=32, validation_data=(x_test, y_test_encoded))
+
+# Valuta il modello
+loss, accuracy = model.evaluate(x_test, y_test_encoded)
+print(f"Test Loss: {loss}, Test Accuracy: {accuracy}")
+
+# Salva il modello su disco
+model.save("modello_di_classificazione.h5")
