@@ -4,6 +4,7 @@
 @load base/protocols/dns
 @load base/protocols/ftp
 
-event Modbus::log_modbus(rec: Modbus::Info){
-    print fmt("%s %s %s", rec$ts, rec$tid, rec$id$resp_h);
+event connection_state_remove(c: connection){
+    print fmt("Connection: %s", c$id);
+    print fmt("%s:%s -> %s:%s, vlan=%s, inner_vlan=%s", c$id$orig_h, c$id$orig_p, c$id$resp_h, c$id$resp_p, c$vlan, c$inner_vlan);
 }
