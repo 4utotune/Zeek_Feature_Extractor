@@ -6,12 +6,12 @@ import dpkt
 import socket
 
 # Funzione di estrazione delle feature con lunghezza fissa
-def extract_features(file_path, max_packets=1000):  # Impostiamo un limite massimo di pacchetti per file
+def extract_features(file_path, max_packets=None):  # Rimuoviamo il limite massimo di pacchetti per file
     file_features = []
 
     with open(file_path, 'rb') as f:
         pcap = dpkt.pcap.Reader(f)
-        packets = list(pcap)[:max_packets]  # Limitiamo il numero di pacchetti
+        packets = list(pcap)  # Non limitiamo più il numero di pacchetti
 
         for _, buf in packets:
             eth = dpkt.ethernet.Ethernet(buf)
@@ -64,13 +64,14 @@ def extract_features(file_path, max_packets=1000):  # Impostiamo un limite massi
             ])
 
     # Ridimensiona la lista di feature per ottenere lunghezza fissa
-    pad_length = max_packets - len(file_features)
-    file_features.extend([[0] * len(file_features[0])] * pad_length)
+    if max_packets is not None:
+        pad_length = max_packets - len(file_features)
+        file_features.extend([[0] * len(file_features[0])] * pad_length)
 
     return np.array(file_features)
 
 # Definizione della funzione per il caricamento parallelo dei dati
-def load_data_from_directory_parallel(directory, label, max_packets=1000):
+def load_data_from_directory_parallel(directory, label, max_packets=None):
     data = []
     with ProcessPoolExecutor() as executor:
         futures = [executor.submit(extract_features, os.path.join(directory, file_name), max_packets) for file_name in os.listdir(directory) if file_name.endswith(".pcap")]
@@ -83,14 +84,14 @@ def load_data_from_directory_parallel(directory, label, max_packets=1000):
 
 if __name__ == "__main__":
     # Directory dei dataset
-    dataset_path_legittimo = "/Users/gabrieletassinari/Desktop/Zeek_Feature_Extractor/dataset_leg/"
+    dataset_path_legittimo = "/Users/gabrieletassinari/Desktop/Zeek_Feature_Extractor/dataset_malevolo0/"
 
     # Lista per le etichette e le features
     labels = []
     features = []
 
     # Caricamento dei dati in modo parallelo
-    load_data_from_directory_parallel(dataset_path_legittimo, label=0, max_packets=1000)
+    load_data_from_directory_parallel(dataset_path_legittimo, label=1, max_packets=None)  # Non impostiamo più il limite di pacchetti
 
     print("sono qui")
     # Converte le liste in array numpy
@@ -102,5 +103,5 @@ if __name__ == "__main__":
 
     print("e qui")
     # Salva gli array NumPy su disco
-    np.save("labs0.npy", labels)
-    np.save("feats0.npy", features)
+    np.save("labsi1.npy", labels)
+    np.save("featsi1.npy", features)
