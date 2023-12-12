@@ -1,72 +1,90 @@
 import numpy as np
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.callbacks import Callback
-from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.layers import LSTM
+from tensorflow.keras.callbacks import Callback
+import random
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-print("Caricamento del dataset...")
-# Carica i dati dal disco con allow_pickle=True
-x_train = np.load("x_train0.npy")
-y_train = np.load("y_train0.npy")
-x_test = np.load("x_test0.npy")
-y_test = np.load("y_test0.npy")
+# Carica i dati dai file con allow_pickle=True
+labels_0 = np.load("labsi0.npy", allow_pickle=True)
+features_0 = np.load("featsi0.npy", allow_pickle=True)
+labels_1 = np.load("labsi1.npy", allow_pickle=True)
+features_1 = np.load("featsi1.npy", allow_pickle=True)
 
-print("Dataset caricato correttamente.")
-# Codifica le etichette
-le = LabelEncoder()
-y_train_encoded = to_categorical(le.fit_transform(y_train))
-y_test_encoded = to_categorical(le.transform(y_test))
+class RandomTestPredictionCallback(Callback):
+    def on_epoch_end(self, epoch, logs=None):
+        # Scegli casualmente un campione dal set di test
+        random_index = random.randint(0, len(X_test) - 1)
+        sample_X = X_test[random_index]
+        sample_y = y_test[random_index]
 
-# Aggiungi una dimensione alle features
-x_train = np.expand_dims(x_train, axis=-1)
-x_test = np.expand_dims(x_test, axis=-1)
+        # Effettua la predizione
+        prediction = self.model.predict(np.expand_dims(sample_X, axis=0))[0][0]
 
-print("Dimensioni x_train:", x_train.shape)
-print("Dimensioni y_train_encoded:", y_train_encoded.shape)
-print("Dimensioni x_test:", x_test.shape)
-print("Dimensioni y_test_encoded:", y_test_encoded.shape)
-print("Tipo di dato x_train:", type(x_train))
-print("Tipo di dato y_train_encoded:", type(y_train_encoded))
-print("Tipo di dato x_test:", type(x_test))
-print("Tipo di dato y_test_encoded:", type(y_test_encoded))
-print("Inizio training...")
+        # Stampa i risultati
+        print(f"\nEpoch {epoch + 1} - Random Test Sample:")
+        #print(f"Input: {sample_X}")
+        if prediction >= 0.5:
+            print(f"True Label: {sample_y} - Predicted Label: [1]")
+        else:
+            print(f"True Label: {sample_y} - Predicted Label: [0]")
+        print(f"Predicted Probability: {prediction}")
 
-# Definisci il modello della rete neurale (feedforward)
+# Unisci i dataset
+labels = np.concatenate((labels_0, labels_1), axis=0)
+features = np.concatenate((features_0, features_1), axis=0)
+
+# Mescola i dati
+indices = np.arange(len(labels))
+np.random.shuffle(indices)
+
+labels = labels[indices]
+features = features[indices]
+
+# Appiattisci completamente le features
+X_flat = [item for sublist in features for item in sublist]
+
+# Converte le liste appiattite in array NumPy
+X_flat = np.array(X_flat)
+
+# Standardizza le features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_flat)
+
+# Reshape delle features appiattite in forma originale
+X_scaled = X_scaled.reshape(features.shape)
+
+# Definisci la lunghezza massima della sequenza desiderata
+max_sequence_length = 1000
+
+# Pad delle sequenze per uniformarle a lunghezza fissa
+X_padded = pad_sequences(X_scaled, maxlen=max_sequence_length, padding='post', truncating='post')
+
+# Converti labels in array bidimensionale
+labels = labels.reshape(-1, 1)
+
+# Dividi i dati in set di allenamento e set di test
+X_train, X_test, y_train, y_test = train_test_split(X_padded, labels, test_size=0.2, random_state=42)
+
+# Creazione del modello
 model = Sequential()
-model.add(Dense(64, input_shape=(x_train.shape[1],), activation='relu'))
+model.add(LSTM(128, input_shape=(max_sequence_length, features.shape[2])))
+model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.5))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(2, activation='softmax'))  # Output layer con 2 neuroni per la classificazione binaria
+model.add(Dense(1, activation='sigmoid'))
+
+# Compilazione del modello
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-# Aggiungi la callback personalizzata al modello
-class PredictionCallback(Callback):
-    def on_epoch_end(self, epoch, logs=None):
-        # Prendi a caso un esempio da x_test
-        random_index = np.random.randint(0, len(x_test))
-        x_example = np.expand_dims(x_test[random_index], axis=0)
-        y_true = y_test[random_index]
+# Allenamento del modello
+model.fit(X_train, y_train, epochs=20, batch_size=32, validation_split=0.1, callbacks=[RandomTestPredictionCallback()])
+# Valutazione del modello
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f"Test Loss: {loss}, Test Accuracy: {accuracy}")
 
-        # Fai la previsione con il modello
-        y_pred = self.model.predict(x_example)[0]
-
-        # Decodifica le etichette
-        decoded_true = le.inverse_transform([np.argmax(y_true)])[0]
-        decoded_pred = le.inverse_transform([np.argmax(y_pred)])[0]
-
-        # Stampa le informazioni
-        print(f"\nEpoch {epoch + 1} - Random Example Prediction:")
-        print(f"True Label: {decoded_true}")
-        print(f"Predicted Label: {decoded_pred}")
-
-# Addestra il modello con la callback
-model.fit(x_train, y_train_encoded, epochs=10, batch_size=32, validation_data=(x_test, y_test_encoded), callbacks=[PredictionCallback()])
-
-# Valuta il modello
-loss, accuracy = model.evaluate(x_test, y_test_encoded)
-print(f"\nTest Loss: {loss}, Test Accuracy: {accuracy}")
-
-# Salva il modello su disco
-model.save("modello_di_classificazione.h5")
+# Salvataggio del modello
+model.save("binary_classifier_model_tot.h5")
