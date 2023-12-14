@@ -11,7 +11,75 @@ Viene inoltre creata una <b>rete neurale di classificazione</b> che permette, pa
 
 Infine viene utilizza Zeek per <b> l'analisi dell'attacco di VLAN Hopping</b> di tipo Double Tagging, per vedere se è possibile individuare tramite Zeek attacchi di questo tipo.
 
-Il paper completo del progetto è disponibile <a href="">QUI</a>
+Il paper completo del progetto è disponibile <a href="https://github.com/4utotune/Zeek_Feature_Extractor/blob/main/Zeek%202.pdf">QUI</a>
+
+## Struttura della repository:
+Vengono ora fornite le indicazioni su come testare tutto il codice da me scritto.
+
+### Rete Neurale:
+
+### Attacchi Zeek:
+0. Posizionarsi all'interno della cartella:
+```bash
+cd attacchi_zeek
+```
+1. È possibile testare il singolo script di rilevazione dell'attacco:
+```bash
+zeek -C -r ../labtel.pcap "nome script da testare"
+```
+2. Testare tutti gli script insieme come viene effettuato nei veri NIDS:
+```bash
+zeek -C -r ../labtel.pcap __load__.zeek
+```
+Ricordarsi di modificare i PATH nel file __load__.zeek
+
+### Feature Singole:
+0. Posizionarsi all'interno della cartella:
+```bash
+cd feature_singole
+```
+1. È possibile testare il singolo script di rilevazione dell'attacco:
+```bash
+zeek -C -r ../last_capture.pcap "nome script da testare"
+zeek -C -r ../labtel.pcap "nome script da testare"
+```
+I file pcap sono:
+last_capture.pcap -> connessione 3-way-handshake
+labtel-pcap -> varie connessioni di tutti i tipi
+non tutti gli script funzionano con "last_capture.pcap" poichè questo presenta solo 3 pacchetti e dunque potrebbero non restituire niente.
+
+### Script
+Le feature singole sono state raggruppate ed ordinate in questa cartella in modo da essere più facilmente testabili.
+0. Posizionarsi all'interno della cartella:
+```bash
+cd script
+```
+1. È possibile testare il singolo script di estrazione complessivo delle feature (legate all'evento):
+```bash
+zeek -C -r ../labtel.pcap "nome script da testare"
+```
+2. Testare tutti gli script insieme come viene effettuato nei veri NIDS:
+```bash
+zeek -C -r ../labtel.pcap __load__.zeek
+```
+Ricordarsi di modificare i PATH nel file __load__.zeek
+
+### Stats
+
+### Vlan Hopping:
+0. Posizionarsi all'interno della cartella:
+```bash
+cd vlan_hopping
+```
+1. Creazione del file output.pcap ovvero il pcap contente il traffico dell'attacco di Vlan Hopping:
+```bash
+python3 creazione_vlanHopping.py
+```
+2. Testare lo script Zeek sui due file pcap benigno e malevolo:
+```bash
+zeek -C -r output.pcap vlan.zeek
+zeek -C -r vlan.pcap vlan.zeek
+```
 
 ### Per avviare il feature extractor usare i comandi:
 1. Posizionarsi nella cartella:
