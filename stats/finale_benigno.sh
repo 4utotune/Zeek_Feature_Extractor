@@ -23,6 +23,5 @@ for pcap_dir in "$pcap_base_dir"/*; do
     fi
 done
 
-##Total results: [flows=4559770 =21088267 =16917445 =388946 =302432 =72533 =51 =6 =0]
 #Total results:
-#flows=4559770, src_bytes=1478356764, dst_bytes=1128175330, src_pkt=26006278, dst_pkt=20094581, tcp=4550004, udp=8589, icmp=1177, other=0
+#flows=4559770, src_bytes=1478356764, dst_bytes=1128175330, src_pkt=26006278, dst_pkt=20094581, tcp=4550004, udp=8589, icmp=1177, other=60

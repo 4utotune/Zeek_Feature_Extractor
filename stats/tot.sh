@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # File contenente i risultati Zeek
-results_file="finale.txt"
+results_file="finale2.txt"
 
 # Inizializza variabili per totali
 total_flows=0
