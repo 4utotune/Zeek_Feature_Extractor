@@ -68,12 +68,12 @@ Ricordarsi di modificare i PATH nel file __load__.zeek
 ```bash
 cd ai
 ```
-1. Effettuare test di funzionamento generico:
+1. Effettuare test di funzionamento generico limitando la lettura di ogni pcap a 1000 pacchetti:
 ```bash
 python3 dataset1.py
 python3 def_ai.py
 ```
-2. Appurato ciò è possibile creare ed allenare la rete neurale:
+2. Creare ed allenare la rete neurale senza limitazioni:
 ```bash
 python3 dataset1completo.py
 python3 fed_ai.py
