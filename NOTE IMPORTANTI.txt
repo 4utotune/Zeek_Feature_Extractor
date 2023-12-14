@@ -1,0 +1,1 @@
+Nel file Readme.md sono presenti tutti i comandi, suddivisi per ogni cartella, per eseguire e testare l'intero progetto.
