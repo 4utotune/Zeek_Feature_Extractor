@@ -48,6 +48,7 @@ Ricordarsi di modificare i PATH nel file __load__.zeek
 
 ### Script
 Le feature singole sono state raggruppate ed ordinate in questa cartella in modo da essere più facilmente testabili.
+
 0. Posizionarsi all'interno della cartella:
 ```bash
 cd script
