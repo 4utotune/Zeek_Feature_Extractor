@@ -20,7 +20,6 @@ def extract_features(file_path, max_packets=235092):  # Impostiamo un limite mas
 
             try:
                 if isinstance(ip, dpkt.ip.IP):
-                    # Estrai informazioni di interesse solo se il pacchetto è di tipo IP
                     src_ip = socket.inet_ntoa(ip.src)
                     dst_ip = socket.inet_ntoa(ip.dst)
                 else:
@@ -49,13 +48,11 @@ def extract_features(file_path, max_packets=235092):  # Impostiamo un limite mas
             else:
                 src_port = dst_port = flags = seq_number = ack_number = 0
 
-            # Informazioni IP
             ip_version = ip.v
             ttl = ip.ttl
             identification = ip.id
             fragment_offset = ip.off & dpkt.ip.IP_OFFMASK
 
-            # Aggiungi le feature alla lista
             file_features.append([
                 protocol, length,
                 src_port, dst_port, flags,
